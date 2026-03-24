@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Калькулятор юань → рубли +5% + наценка</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #e0e5ec 0%, #f0f4fa 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .calculator {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.1), -10px -10px 30px rgba(255,255,255,0.8);
+            padding: 2rem 2rem 2.2rem;
+            max-width: 550px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: #1a2a3f;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        h1 small {
+            font-size: 0.8rem;
+            font-weight: normal;
+            background: #eef2ff;
+            padding: 4px 10px;
+            border-radius: 40px;
+            color: #2c5f8a;
+        }
+        .sub {
+            color: #4a5b6e;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+            border-left: 3px solid #ff9800;
+            padding-left: 12px;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #1f3a4b;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        label i {
+            font-style: normal;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.2rem;
+            border: none;
+            background: #ffffffdd;
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.02), inset -2px -2px 5px rgba(255,255,255,0.7), 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #0f2b3b;
+            outline: none;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        input:focus {
+            background: white;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05), 0 0 0 3px rgba(255,152,0,0.3);
+            border-color: #ffb347;
+        }
+        .row-flex {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .row-flex .input-group {
+            flex: 1;
+            min-width: 120px;
+        }
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .quick-btn {
+            background: #eef2fa;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2c5f8a;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            flex: 1;
+            text-align: center;
+        }
+        .quick-btn:hover {
+            background: #ff9800;
+            color: white;
+            transform: scale(0.97);
+        }
+        .result-block {
+            background: #1e2f3f;
+            border-radius: 36px;
+            padding: 1.5rem;
+            margin-top: 1.2rem;
+            text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .result-label {
+            color: #cbdbe6;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        .rub-amount {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffd966;
+            margin: 10px 0 5px;
+            word-break: break-word;
+            line-height: 1.2;
+        }
+        .rub-amount span {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #ffb347;
+        }
+        .fee-badge {
+            background: #2a4155;
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            color: #ffcd7e;
+            margin-top: 8px;
+        }
+        .breakdown {
+            font-size: 0.7rem;
+            color: #9aaec2;
+            margin-top: 12px;
+            text-align: left;
+            border-top: 1px solid #2f4a60;
+            padding-top: 10px;
+        }
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #5f6f80;
+        }
+        hr {
+            margin: 16px 0 8px;
+            border: none;
+            height: 1px;
+            background: rgba(0,0,0,0.05);
+        }
+        @media (max-width: 480px) {
+            .calculator { padding: 1.5rem; }
+            .rub-amount { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="calculator">
+    <h1>🇨🇳 → 🇷🇺 <small>+5% + ваша наценка</small></h1>
+    <div class="sub">Курс, сумма в юанях, а сверху вы добавляете любую сумму в рублях</div>
+
+    <div class="input-group">
+        <label><i>💱</i> Курс юаня (1 CNY → RUB)</label>
+        <input type="number" id="cnyRate" step="any" value="13.50" placeholder="Например, 13.50">
+    </div>
+
+    <div class="input-group">
+        <label><i>🧮</i> Сумма в юанях (CNY)</label>
+        <input type="number" id="cnyAmount" step="any" value="100" placeholder="Введите сумму">
+    </div>
+
+    <div class="input-group">
+        <label><i>➕</i> Ваша наценка (доп. сумма в рублях)</label>
+        <input type="number" id="markupRub" step="any" value="0" placeholder="Например: 100, 200, 500">
+        <div class="quick-buttons">
+            <button type="button" class="quick-btn" data-markup="100">+100 ₽</button>
+            <button type="button" class="quick-btn" data-markup="200">+200 ₽</button>
+            <button type="button" class="quick-btn" data-markup="500">+500 ₽</button>
+            <button type="button" class="quick-btn" data-markup="0">Сбросить</button>
+        </div>
+    </div>
+
+    <div class="result-block">
+        <div class="result-label">ИТОГО К ОПЛАТЕ (РУБ)</div>
+        <div class="rub-amount" id="rubResult">0 <span>₽</span></div>
+        <div class="fee-badge">✔️ Включая фиксированные 5% + ваша наценка</div>
+        <div class="breakdown" id="breakdownText">
+            Расчёт появится здесь
+        </div>
+    </div>
+    <div class="footer-note">
+        ✨ Формула: (сумма_юаней × курс) × 1.05 + ваша_наценка(₽)<br>
+        ⚡ Изменяй любые поля — результат обновляется автоматически
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Элементы DOM
+        const rateInput = document.getElementById('cnyRate');
+        const amountInput = document.getElementById('cnyAmount');
+        const markupInput = document.getElementById('markupRub');
+        const rubResultSpan = document.getElementById('rubResult');
+        const breakdownDiv = document.getElementById('breakdownText');
+
+        // Фиксированный коэффициент комиссии 5% → множитель 1.05
+        const COMMISSION_FACTOR = 1.05;
+
+        // Функция обновления результата и детализации
+        function recalcAndDisplay() {
+            // Получаем значения с заменой запятой на точку
+            let rawRate = rateInput.value.trim().replace(',', '.');
+            let rawAmount = amountInput.value.trim().replace(',', '.');
+            let rawMarkup = markupInput.value.trim().replace(',', '.');
+
+            // Преобразуем в числа
+            let rate = parseFloat(rawRate);
+            let amount = parseFloat(rawAmount);
+            let markup = parseFloat(rawMarkup);
+
+            // Проверка на валидность
+            if (isNaN(rate)) rate = 0;
+            if (isNaN(amount)) amount = 0;
+            if (isNaN(markup)) markup = 0;
+
+            // Расчёт: сумма в рублях без комиссии = amount * rate
+            const baseRub = amount * rate;
+            // Добавляем 5%
+            const afterCommission = baseRub * COMMISSION_FACTOR;
+            // Итог с наценкой
+            const totalRub = afterCommission + markup;
+
+            // Форматируем итог: 2 знака после запятой
+            let formattedTotal = totalRub.toFixed(2);
+            if (formattedTotal === '-0.00') formattedTotal = '0.00';
+            
+            // Обновляем крупный результат
+            rubResultSpan.innerHTML = `${formattedTotal} <span>₽</span>`;
+            
+            // Формируем текст детализации
+            const formattedBase = baseRub.toFixed(2);
+            const formattedCommission = afterCommission.toFixed(2);
+            const formattedMarkup = markup.toFixed(2);
+            
+            let breakdownHtml = `
+                📊 <strong>Детали:</strong><br>
+                • ${amount} CNY × ${rate} ₽ = ${formattedBase} ₽<br>
+                • +5% (фикс) = ${formattedCommission} ₽<br>
+                • + ваша наценка = + ${formattedMarkup} ₽<br>
+                <strong style="color:#ffd966">✅ ИТОГО: ${formattedTotal} ₽</strong>
+            `;
+            
+            // Если наценка = 0, можно слегка упростить вид, но оставим информативно
+            if (markup === 0) {
+                breakdownHtml = `
+                    📊 <strong>Детали:</strong><br>
+                    • ${amount} CNY × ${rate} ₽ = ${formattedBase} ₽<br>
+                    • +5% (фикс) = ${formattedCommission} ₽<br>
+                    • наценка не добавлена<br>
+                    <strong style="color:#ffd966">✅ ИТОГО: ${formattedTotal} ₽</strong>
+                `;
+            }
+            
+            breakdownDiv.innerHTML = breakdownHtml;
+        }
+        
+        // Быстрые кнопки для наценки
+        const quickButtons = document.querySelectorAll('.quick-btn');
+        quickButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const markupValue = parseFloat(this.getAttribute('data-markup'));
+                if (!isNaN(markupValue)) {
+                    markupInput.value = markupValue;
+                    recalcAndDisplay();
+                }
+            });
+        });
+        
+        // Привязываем события на ввод
+        rateInput.addEventListener('input', recalcAndDisplay);
+        amountInput.addEventListener('input', recalcAndDisplay);
+        markupInput.addEventListener('input', recalcAndDisplay);
+        
+        // Доп. защита: при потере фокуса приводим к нормальному виду
+        function sanitizeInput(inputEl) {
+            inputEl.addEventListener('blur', function() {
+                let val = this.value.trim().replace(',', '.');
+                let num = parseFloat(val);
+                if (!isNaN(num)) {
+                    this.value = num.toString();
+                } else if (val !== '') {
+                    this.value = '';
+                }
+                recalcAndDisplay();
+            });
+        }
+        sanitizeInput(rateInput);
+        sanitizeInput(amountInput);
+        sanitizeInput(markupInput);
+        
+        // Инициализация при загрузке
+        recalcAndDisplay();
+    })();
+</script>
+</body>
+</html>
