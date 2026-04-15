@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Калькулятор юань → рубли</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #e0e5ec 0%, #f0f4fa 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .calculator {
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.1), -10px -10px 30px rgba(255,255,255,0.8);
+            padding: 2rem 2rem 2.2rem;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: #1a2a3f;
+            text-align: center;
+        }
+        .sub {
+            color: #4a5b6e;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: 12px;
+        }
+        .input-group {
+            margin-bottom: 1.8rem;
+        }
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #1f3a4b;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1.2rem;
+            border: none;
+            background: #ffffffdd;
+            border-radius: 32px;
+            outline: none;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        input:focus {
+            background: white;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            border-color: #4caf50;
+        }
+        .result-block {
+            background: #1e2f3f;
+            border-radius: 36px;
+            padding: 1.5rem;
+            margin-top: 1.2rem;
+            text-align: center;
+        }
+        .result-label {
+            color: #cbdbe6;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        .rub-amount {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffd966;
+            margin: 10px 0 5px;
+        }
+        .rub-amount span {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #ffb347;
+        }
+        .footer-note {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #5f6f80;
+        }
+    </style>
+</head>
+<body>
+<div class="calculator">
+    <h1>🇨🇳 → 🇷🇺</h1>
+    <div class="sub">Узнайте стоимость в рублях</div>
+
+    <div class="input-group">
+        <label>💱 Курс юаня (1 CNY → RUB)</label>
+        <input type="number" id="cnyRate" step="any" value="13.50">
+    </div>
+
+    <div class="input-group">
+        <label>🧮 Сумма в юанях (CNY)</label>
+        <input type="number" id="cnyAmount" step="any" value="100">
+    </div>
+
+    <div class="result-block">
+        <div class="result-label">ИТОГОВАЯ ЦЕНА (РУБ)</div>
+        <div class="rub-amount" id="rubResult">0 <span>₽</span></div>
+    </div>
+    <div class="footer-note">✨ Актуальный курс обновляется ежедневно</div>
+</div>
+
+<script>
+    const rateInput = document.getElementById('cnyRate');
+    const amountInput = document.getElementById('cnyAmount');
+    const rubResultSpan = document.getElementById('rubResult');
+
+    const COMMISSION_FACTOR = 1.30;
+
+    function update() {
+        let rate = parseFloat(rateInput.value) || 0;
+        let amount = parseFloat(amountInput.value) || 0;
+        let total = amount * rate * COMMISSION_FACTOR;
+        rubResultSpan.innerHTML = total.toFixed(2) + ' <span>₽</span>';
+    }
+
+    rateInput.addEventListener('input', update);
+    amountInput.addEventListener('input', update);
+    update();
+</script>
+</body>
+</html>
